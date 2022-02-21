@@ -25,7 +25,8 @@ let QueryResolvers = {
     }
     return false;
   },
-  getAllContacts: () => {
+  getAllContacts: async () => {
+    await wait(300);
     let ContactArr = [];
     for (let id in Contacts) {
       ContactArr.push(Contacts[id]);
@@ -90,7 +91,9 @@ class MutationResult {
 }
 
 const Contacts = {};
-Contacts['foo'] = new Contact('foo', 'test', '01093270377');
-Contacts['goo'] = new Contact('goo', 't2st', '01093270378');
+for (let i = 10; i < 50; i++) {
+  let id = String(i);
+  Contacts[id] = new Contact(id, `test${id}`, `010123400${id}`);
+}
 
 module.exports = { ...QueryResolvers, ...MutationResolvers };
