@@ -1,8 +1,9 @@
+let crypto = require("crypto");
 let wait = (time) => new Promise((resolve) => setTimeout(resolve, time));
 
 let QueryResolvers = {
   test: () => {
-    return 'foo';
+    return "foo";
   },
   testAsync: async ({ time }) => {
     await wait(time);
@@ -43,39 +44,36 @@ let QueryResolvers = {
 };
 
 let MutationResolvers = {
-  insertContact: ({ id, name, phoneNumber }) => {
-    if (Contacts[id]) {
-      return new MutationResult(false, '중복된 ID입니다.');
-    } else {
-      for (let _ in Contacts) {
-        if (phoneNumber == Contacts[_].phoneNumber)
-          return new MutationResult(false, '중복된 전화번호입니다.');
-      }
-      Contacts[id] = new Contact(id, name, phoneNumber);
-      return new MutationResult(true, '성공했습니다.', Contacts[id]);
+  insertContact: ({ name, phoneNumber }) => {
+    for (let _ in Contacts) {
+      if (phoneNumber == Contacts[_].phoneNumber)
+        return new MutationResult(false, "중복된 전화번호입니다.");
     }
+    let id = crypto.randomBytes(10).toString("hex");
+    Contacts[id] = new Contact(id, name, phoneNumber);
+    return new MutationResult(true, "성공했습니다.", Contacts[id]);
   },
   updateContact: ({ id, name, phoneNumber }) => {
     if (Contacts[id]) {
       Contacts[id].name = name;
       Contacts[id].phoneNumber = phoneNumber;
-      return new MutationResult(true, '성공했습니다.', Contacts[id]);
+      return new MutationResult(true, "성공했습니다.", Contacts[id]);
     } else {
-      return new MutationResult(false, '존재하지 않는 ID입니다.');
+      return new MutationResult(false, "존재하지 않는 ID입니다.");
     }
   },
   deleteContact: ({ id }) => {
     if (Contacts[id]) {
       delete Contacts[id];
-      return new MutationResult(true, '성공했습니다.');
+      return new MutationResult(true, "성공했습니다.");
     } else {
-      return new MutationResult(false, '존재하지 않는 ID입니다.');
+      return new MutationResult(false, "존재하지 않는 ID입니다.");
     }
   },
 };
 
 class Contact {
-  constructor(id = '', name = '', phoneNumber = '') {
+  constructor(id = "", name = "", phoneNumber = "") {
     this.id = id;
     this.name = name;
     this.phoneNumber = phoneNumber;
@@ -83,7 +81,7 @@ class Contact {
 }
 
 class MutationResult {
-  constructor(isMutated, msg = '', contact = new Contact()) {
+  constructor(isMutated, msg = "", contact = new Contact()) {
     this.isMutated = isMutated;
     this.msg = msg;
     this.contact = contact;
@@ -92,8 +90,8 @@ class MutationResult {
 
 const Contacts = {};
 for (let i = 10; i < 50; i++) {
-  let id = String(i);
-  Contacts[id] = new Contact(id, `test${id}`, `010123400${id}`);
+  let id = crypto.randomBytes(10).toString("hex");
+  Contacts[id] = new Contact(id, `test${i}`, `010123400${i}`);
 }
 
 module.exports = { ...QueryResolvers, ...MutationResolvers };

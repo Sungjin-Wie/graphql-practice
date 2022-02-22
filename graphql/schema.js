@@ -1,6 +1,7 @@
-var Graphql = require('graphql');
+var Graphql = require("graphql");
 
 module.exports = Graphql.buildSchema(`
+
 type MutationResult {
     isMutated: Boolean!
     errMsg: String
@@ -8,15 +9,15 @@ type MutationResult {
 }
 
 type Contact {
-    id: String!
-    name: String!
-    phoneNumber: String!
+    id: ID!
+    name: String
+    phoneNumber: String
 }
 
 type Query {
     test: String!
     testAsync(time: Int!): String!
-    getContact(id: String!): Contact
+    getContact(id: ID!): Contact
     doesPhoneNumberExist(phoneNumber: String!): Boolean!
     doesIDExist(id: String!): Boolean!
     getAllContacts: [Contact]
@@ -24,7 +25,7 @@ type Query {
 }
 
 type Mutation {
-    insertContact(id: String!, name: String!, phoneNumber: String!): MutationResult!
+    insertContact(name: String!, phoneNumber: String!): MutationResult!
     updateContact(id: String!, name: String, phoneNumber: String): MutationResult!
     deleteContact(id: String!): MutationResult!
 }
