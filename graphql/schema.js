@@ -1,4 +1,4 @@
-var Graphql = require("graphql");
+var Graphql = require('graphql');
 
 module.exports = Graphql.buildSchema(`
 
@@ -16,10 +16,11 @@ type Contact {
 
 type Query {
     test: String!
-    testAsync(time: Int!): String!
+    testAsync(time: Int!=1000): String!
     getContact(id: ID!): Contact
     doesPhoneNumberExist(phoneNumber: String!): Boolean!
     doesIDExist(id: String!): Boolean!
+    getContacts(first: Int=0, offset: Int=0): [Contact]
     getAllContacts: [Contact]
     getAllPhoneNumbers: [String]
 }
